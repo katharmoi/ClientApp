@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Client App</string>
-    <string name="connect">Connect</string>
+    <string name="response">Get Response</string>
 </resources>
