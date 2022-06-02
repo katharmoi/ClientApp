@@ -1,5 +1,6 @@
 package io.appeiron.clientapp.data
 
+import android.app.Application
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -14,10 +15,10 @@ import javax.inject.Inject
 
 const val SERVICE_NAME = "sampleaidl"
 
-/**
+/** 
  * Custom LiveData class responsible from Service Connection
  */
-class SampleServiceLiveData @Inject constructor(private val app: Context) : LiveData<String>(),
+class SampleServiceLiveData @Inject constructor(private val app: Application) : LiveData<String>(),
     ServiceConnection {
 
     private var cb: IResponseCallback.Stub = object : IResponseCallback.Stub() {
@@ -36,8 +37,14 @@ class SampleServiceLiveData @Inject constructor(private val app: Context) : Live
 
     override fun onActive() {
         super.onActive()
-
-        app.bindService(Intent(SERVICE_NAME), this, Context.BIND_AUTO_CREATE)
+        val intent = Intent(SERVICE_NAME)
+        val pack = ISampleApi::class.java.`package`
+        pack?.let {
+            intent.setPackage(pack.name)
+            app.applicationContext.bindService(
+                intent, this, Context.BIND_AUTO_CREATE
+            )
+        }
     }
 
     override fun onInactive() {
@@ -48,7 +55,6 @@ class SampleServiceLiveData @Inject constructor(private val app: Context) : Live
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         serviceBinding = ISampleApi.Stub.asInterface(service)
-        serviceBinding = null
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
