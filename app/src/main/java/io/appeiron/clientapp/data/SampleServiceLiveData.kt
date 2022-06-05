@@ -11,23 +11,25 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import io.appeiron.serverapp.IResponseCallback
 import io.appeiron.serverapp.ISampleApi
+import java.util.*
 import javax.inject.Inject
 
 const val SERVICE_NAME = "sampleaidl"
 
-/** 
+/**
  * Custom LiveData class responsible from Service Connection
  */
-class SampleServiceLiveData @Inject constructor(private val app: Application) : LiveData<String>(),
+class SampleServiceLiveData @Inject constructor(private val app: Application) :
+    LiveData<ServerResponse<String>>(),
     ServiceConnection {
 
     private var cb: IResponseCallback.Stub = object : IResponseCallback.Stub() {
-        override fun onSuccess(msg: String?) {
-            postValue(msg)
+        override fun onSuccess(requestId: String, msg: String?) {
+            postValue(ServerResponse.success(msg))
         }
 
         override fun onFailure(msg: String?) {
-            postValue(msg)
+            postValue(ServerResponse.error(msg, null))
         }
 
     }
@@ -61,10 +63,11 @@ class SampleServiceLiveData @Inject constructor(private val app: Application) : 
         serviceBinding = null
     }
 
-    fun requestResponse() {
+    fun getResponse() {
         try {
-            serviceBinding?.respond(cb)
+            serviceBinding?.getResponse(UUID.randomUUID().toString(), cb)
         } catch (e: RemoteException) {
+            ServerResponse.error("Failure on request", e)
             Log.e(javaClass.simpleName, "Failure on request", e)
         }
     }
