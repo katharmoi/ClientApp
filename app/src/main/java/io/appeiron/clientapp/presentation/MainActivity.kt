@@ -5,6 +5,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
+import io.appeiron.clientapp.data.ServerResponse
+import io.appeiron.clientapp.data.Status
 import io.appeiron.clientapp.databinding.ActivityMainBinding
 
 
@@ -19,10 +21,21 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //Observer to update server response text
-        val observer = Observer<String> { response ->
-            //Update UI
-            binding.txtResponse.text = response
+        //Observer to update UI
+        val observer = Observer<ServerResponse<String>> { response ->
+            when (response.status) {
+                Status.SUCCESS -> {
+                    binding.txtResponse.text = response.message
+                    binding.btnConnect.isEnabled = true
+                }
+                Status.ERROR -> {
+                    binding.txtResponse.text = response.message
+                    binding.btnConnect.isEnabled = true
+                }
+                Status.LOADING -> {
+                    binding.btnConnect.isEnabled = false
+                }
+            }
         }
 
         //Observe LiveData
