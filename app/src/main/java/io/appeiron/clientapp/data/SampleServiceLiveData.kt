@@ -64,6 +64,7 @@ class SampleServiceLiveData @Inject constructor(private val app: Application) :
     }
 
     fun getResponse() {
+        postValue(ServerResponse.loading(null))
         try {
             serviceBinding?.getResponse(UUID.randomUUID().toString(), cb)
         } catch (e: RemoteException) {
