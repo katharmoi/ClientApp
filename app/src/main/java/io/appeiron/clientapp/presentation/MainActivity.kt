@@ -1,6 +1,7 @@
 package io.appeiron.clientapp.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -25,11 +26,11 @@ class MainActivity : AppCompatActivity() {
         val observer = Observer<ServerResponse<String>> { response ->
             when (response.status) {
                 Status.SUCCESS -> {
-                    binding.txtResponse.text = response.message
+                    binding.txtResponse.text = response.data
                     binding.btnConnect.isEnabled = true
                 }
                 Status.ERROR -> {
-                    binding.txtResponse.text = response.message
+                    binding.txtResponse.text = response.data
                     binding.btnConnect.isEnabled = true
                 }
                 Status.LOADING -> {
