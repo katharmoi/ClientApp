@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                     binding.btnConnect.isEnabled = true
                 }
                 Status.ERROR -> {
-                    binding.txtResponse.text = response.data
+                    binding.txtResponse.text = response.message
                     binding.btnConnect.isEnabled = true
                 }
                 Status.LOADING -> {

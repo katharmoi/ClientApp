@@ -39,6 +39,8 @@ class SampleServiceLiveData @Inject constructor(private val app: Application) :
 
     override fun onActive() {
         super.onActive()
+
+        //Bind to the Service
         val intent = Intent(SERVICE_NAME)
         val pack = ISampleApi::class.java.`package`
         pack?.let {
@@ -65,10 +67,11 @@ class SampleServiceLiveData @Inject constructor(private val app: Application) :
 
     fun getResponse() {
         postValue(ServerResponse.loading(null))
+
         try {
             serviceBinding?.getResponse(UUID.randomUUID().toString(), cb)
         } catch (e: RemoteException) {
-            ServerResponse.error("Failure on request", e)
+            postValue(ServerResponse.error("Failure onrequest", null))
             Log.e(javaClass.simpleName, "Failure on request", e)
         }
     }
