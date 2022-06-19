@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //Add new comment
+
+        //Some other comment
         //Observe LiveData
         viewModel.serviceLiveData.observe(this, observer)
 
